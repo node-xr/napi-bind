@@ -2,7 +2,7 @@
 #include <node_api.h>
 #include <stdexcept>
 
-namespace napi_wrap
+namespace napi_bind
 {
 
 inline constexpr auto ok(napi_status status) -> void
@@ -49,11 +49,11 @@ void encode_property(napi_env env, napi_value object, const char *prop, const T 
 template <typename Result, typename... Args>
 napi_status set_function(napi_env env, napi_value parent, const char *name, Result (*fn)(Args...));
 
-} // namespace napi_wrap
+} // namespace napi_bind
 
 // Helper function for N-API that supports C++ nullptr -> JS null aliasing.
 napi_status napi_get_value_external_opt(napi_env env, napi_value value, void **result);
 napi_status napi_create_external_opt(napi_env env, void *data, napi_finalize finalize_cb, void *finalize_hint, napi_value *result);
 
-#include "napi_wrap_detail.hpp"
-#include "napi_wrap_converters.hpp"
+#include "napi_bind_detail.hpp"
+#include "napi_bind_converters.hpp"

@@ -1,11 +1,14 @@
 {
   'targets': [
     {
-      'target_name': 'binding',
+      'target_name': 'napi-bind-test',
       'sources': [
         'primitives.cpp'
       ],
-      'defines': [ 'NAPI_CPP_EXCEPTIONS' ],
+      'defines': [
+        'NAPI_EXPERIMENTAL',
+        'NAPI_ENABLE_CPP_EXCEPTIONS',
+      ],
       'include_dirs': ["<!@(node -p \"require('../').include\")"],
       'cflags': [ '-Werror', '-Wall', '-Wextra', '-Wpedantic', '-Wunused-parameter' ],
       'cflags_cc': [ '-Werror', '-Wall', '-Wextra', '-Wpedantic', '-Wunused-parameter' ],
