@@ -3,7 +3,7 @@
 #include <node_api.h>
 #include <type_traits>
 
-namespace wrap
+namespace napi_wrap
 {
 
 //===========================================================================
@@ -244,4 +244,4 @@ struct encoder<T, typename std::enable_if_t<std::is_enum<T>::value>>
   }
 };
 
-} // namespace wrap
+} // namespace napi_wrap

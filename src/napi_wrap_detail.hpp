@@ -5,7 +5,7 @@
 #include <stdexcept>
 #include <utility>
 
-namespace wrap
+namespace napi_wrap
 {
 
 // https://stackoverflow.com/a/47640807
@@ -179,7 +179,7 @@ napi_status set_function(napi_env env, napi_value parent, const char *name, Resu
   return napi_ok;
 }
 
-} // namespace wrap
+} // namespace napi_wrap
 
 inline napi_status napi_get_value_external_opt(napi_env env, napi_value value, void **result)
 {
