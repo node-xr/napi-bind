@@ -1,15 +1,15 @@
 {
   "bugs": {
-    "url": "https://github.com/node-xr/napi-wrap/issues"
+    "url": "https://github.com/node-xr/napi-bind/issues"
   },
   "contributors": [
     "Pras Velagapudi (https://github.com/psigen)",
     "Pyry Matikainen (https://github.com/pyrym)"
   ],
   "dependencies": {},
-  "description": "Node.js API (N-API) automated wrappers",
+  "description": "Node.js API (N-API) automated C-style function bindings",
   "devDependencies": {},
-  "homepage": "https://github.com/node-xr/napi-wrap",
+  "homepage": "https://github.com/node-xr/napi-bind",
   "keywords": [
     "n-api",
     "napi",
@@ -21,11 +21,11 @@
   ],
   "license": "MIT",
   "main": "index.js",
-  "name": "napi-wrap",
+  "name": "napi-bind",
   "readme": "README.md",
   "repository": {
     "type": "git",
-    "url": "git://github.com/node-xr/napi-wrap.git"
+    "url": "git://github.com/node-xr/napi-bind.git"
   },
   "scripts": {
     "pretest": "node-gyp rebuild -C test",
