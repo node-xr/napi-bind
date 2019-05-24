@@ -1,31 +1,39 @@
 {
-    "bugs": {
-      "url": "https://github.com/node-xr/napi-wrap/issues"
-    },
-    "contributors": [
-      "Pras Velagapudi (https://github.com/psigen)",
-      "Pyry Matikainen (https://github.com/pyrym)"
-    ],
-    "dependencies": {},
-    "description": "Node.js API (N-API) automated wrappers",
-    "devDependencies": {},
-    "homepage": "https://github.com/node-xr/napi-wrap",
-    "keywords": ["n-api", "napi", "addon", "native", "bindings", "c", "c++"],
-    "license": "MIT",
-    "main": "index.js",
-    "name": "napi-wrap",
-    "readme": "README.md",
-    "repository": {
-      "type": "git",
-      "url": "git://github.com/node-xr/napi-wrap.git"
-    },
-    "scripts": {
-      "pretest": "node-gyp rebuild -C test",
-      "test": "node test",
-      "predev": "node-gyp rebuild -C test --debug",
-      "dev": "node test",
-      "predev:incremental": "node-gyp configure build -C test --debug",
-      "dev:incremental": "node test",
-    },
-    "version": "1.6.3"
-  }
+  "bugs": {
+    "url": "https://github.com/node-xr/napi-wrap/issues"
+  },
+  "contributors": [
+    "Pras Velagapudi (https://github.com/psigen)",
+    "Pyry Matikainen (https://github.com/pyrym)"
+  ],
+  "dependencies": {},
+  "description": "Node.js API (N-API) automated wrappers",
+  "devDependencies": {},
+  "homepage": "https://github.com/node-xr/napi-wrap",
+  "keywords": [
+    "n-api",
+    "napi",
+    "addon",
+    "native",
+    "bindings",
+    "c",
+    "c++"
+  ],
+  "license": "MIT",
+  "main": "index.js",
+  "name": "napi-wrap",
+  "readme": "README.md",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/node-xr/napi-wrap.git"
+  },
+  "scripts": {
+    "pretest": "node-gyp rebuild -C test",
+    "test": "node test",
+    "predev": "node-gyp rebuild -C test --debug",
+    "dev": "node test",
+    "predev:incremental": "node-gyp configure build -C test --debug",
+    "dev:incremental": "node test"
+  },
+  "version": "1.6.3"
+}
