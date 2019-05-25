@@ -2,9 +2,10 @@
   "bugs": {
     "url": "https://github.com/node-xr/napi-bind/issues"
   },
-  "contributors": [
+  "author": "Pras Velagapudi (https://github.com/psigen)",
+  "maintainers": [
     "Pras Velagapudi (https://github.com/psigen)",
-    "Pyry Matikainen (https://github.com/pyrym)"
+    "Pyry Matikainen (https://github.com/PyryM)"
   ],
   "dependencies": {},
   "description": "Node.js API (N-API) automated C-style function bindings",
@@ -34,5 +35,5 @@
     "pretest": "node-gyp rebuild -C test",
     "test": "mocha test"
   },
-  "version": "1.6.3"
+  "version": "0.1.0"
 }
