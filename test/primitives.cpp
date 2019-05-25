@@ -1,15 +1,9 @@
 #include "primitives.hpp"
+#include "util.hpp"
 #include <napi_bind.hpp>
 
 using napi_bind::ok;
 using napi_bind::set_function;
-
-/// A simple identity function to test serdes.
-template<typename T>
-T identity(const T a)
-{
-  return a;
-}
 
 napi_value create_primitives(napi_env env)
 {

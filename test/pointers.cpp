@@ -1,4 +1,5 @@
 #include "pointers.hpp"
+#include "util.hpp"
 #include <napi_bind.hpp>
 
 using napi_bind::ok;
