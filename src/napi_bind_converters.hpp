@@ -116,6 +116,35 @@ inline napi_value encode(napi_env env, const uint32_t value)
 
 //===========================================================================
 template <>
+inline uint64_t decode(napi_env env, napi_value value)
+{
+  napi_valuetype type;
+  ok(napi_typeof(env, value, &type));
+
+  uint64_t result;
+  bool lossless;
+
+  switch (type)
+  {
+  case napi_bigint:
+    ok(napi_get_value_bigint_uint64(env, value, &result, &lossless));
+    if (!lossless)
+      throw new std::runtime_error("BigInt to Uint64 conversion loss.");
+    break;
+
+  case napi_number:
+    ok(napi_get_value_int64(env, value, reinterpret_cast<int64_t*>(&result)));
+    break;
+
+  default:
+    throw std::runtime_error("Invalid JS type for uint64_t.");
+  }
+
+  return result;
+}
+
+//===========================================================================
+template <>
 inline int8_t decode(napi_env env, napi_value value)
 {
   int32_t result;
@@ -169,11 +198,28 @@ inline napi_value encode(napi_env env, const int32_t value)
 template <>
 inline int64_t decode(napi_env env, napi_value value)
 {
+  napi_valuetype type;
+  ok(napi_typeof(env, value, &type));
+
   int64_t result;
   bool lossless;
-  ok(napi_get_value_bigint_int64(env, value, &result, &lossless));
-  if (!lossless)
-    throw new std::runtime_error("BigInt to Int64 conversion loss.");
+
+  switch (type)
+  {
+  case napi_bigint:
+    ok(napi_get_value_bigint_int64(env, value, &result, &lossless));
+    if (!lossless)
+      throw new std::runtime_error("BigInt to Uint64 conversion loss.");
+    break;
+
+  case napi_number:
+    ok(napi_get_value_int64(env, value, &result));
+    break;
+
+  default:
+    throw std::runtime_error("Invalid JS type for uint64_t.");
+  }
+
   return result;
 }
 
@@ -182,18 +228,6 @@ inline napi_value encode(napi_env env, const int64_t value)
 {
   napi_value result;
   ok(napi_create_bigint_int64(env, value, &result));
-  return result;
-}
-
-//===========================================================================
-template <>
-inline uint64_t decode(napi_env env, napi_value value)
-{
-  uint64_t result;
-  bool lossless;
-  ok(napi_get_value_bigint_uint64(env, value, &result, &lossless));
-  if (!lossless)
-    throw new std::runtime_error("BigInt to Uint64 conversion loss.");
   return result;
 }
 

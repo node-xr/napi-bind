@@ -27,13 +27,13 @@ describe("primitives", () => {
   });
 
   it("int64_t", () => {
-    expect(bind.primitives.identity_int64(-32768)).to.eq(-32768); // TODO
-    expect(bind.primitives.identity_int64(0)).to.eq(0);
-    expect(bind.primitives.identity_int64(32767)).to.eq(32767);
+    expect(bind.primitives.identity_int64(-32768)).to.eq(-32768n);
+    expect(bind.primitives.identity_int64(0)).to.eq(0n);
+    expect(bind.primitives.identity_int64(32767)).to.eq(32767n);
 
-    expect(bind.primitives.identity_int64(-32768n)).to.eq(-32768n);
-    expect(bind.primitives.identity_int64(0n)).to.eq(0);
-    expect(bind.primitives.identity_int64(32767n)).to.eq(32767n);
+    expect(bind.primitives.identity_int64(-9223372036854775808n)).to.eq(-9223372036854775808n);
+    expect(bind.primitives.identity_int64(0n)).to.eq(0n);
+    expect(bind.primitives.identity_int64(-9223372036854775807n)).to.eq(-9223372036854775807n);
   });
 
   it("uint8_t", () => {
@@ -52,8 +52,8 @@ describe("primitives", () => {
   });
 
   it("uint64_t", () => {
-    expect(bind.primitives.identity_uint64(0x00000000)).to.eq(0x00000000);
-    expect(bind.primitives.identity_uint64(0xFFFFFFFF)).to.eq(0xFFFFFFFF);
+    expect(bind.primitives.identity_uint64(0x00000000)).to.eq(0x00000000n);
+    expect(bind.primitives.identity_uint64(0xFFFFFFFF)).to.eq(0xFFFFFFFFn);
 
     expect(bind.primitives.identity_uint64(0x0000000000000000n)).to.eq(0x0000000000000000n);
     expect(bind.primitives.identity_uint64(0xFFFFFFFFFFFFFFFFn)).to.eq(0xFFFFFFFFFFFFFFFFn);
@@ -70,7 +70,7 @@ describe("primitives", () => {
 
   it("double", () => {
     expect(bind.primitives.identity_double(0.0)).to.eq(0.0);
-    expect(bind.primitives.identity_float(Number.EPSILON)).to.eq(Number.EPSILON);
+    expect(bind.primitives.identity_double(Number.EPSILON)).to.eq(Number.EPSILON);
     expect(bind.primitives.identity_double(Number.POSITIVE_INFINITY)).to.eq(Number.POSITIVE_INFINITY);
     expect(bind.primitives.identity_double(Number.NEGATIVE_INFINITY)).to.eq(Number.NEGATIVE_INFINITY);
     expect(bind.primitives.identity_double(NaN)).to.be.NaN;
