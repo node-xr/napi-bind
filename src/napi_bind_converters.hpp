@@ -116,6 +116,40 @@ inline napi_value encode(napi_env env, const uint32_t value)
 
 //===========================================================================
 template <>
+inline int8_t decode(napi_env env, napi_value value)
+{
+  uint32_t result;
+  ok(napi_get_value_uint32(env, value, &result));
+  return result;
+}
+
+template <>
+inline napi_value encode(napi_env env, const int8_t value)
+{
+  napi_value result;
+  ok(napi_create_uint32(env, value, &result));
+  return result;
+}
+
+//===========================================================================
+template <>
+inline int16_t decode(napi_env env, napi_value value)
+{
+  int32_t result;
+  ok(napi_get_value_int32(env, value, &result));
+  return result;
+}
+
+template <>
+inline napi_value encode(napi_env env, const int16_t value)
+{
+  napi_value result;
+  ok(napi_create_int32(env, value, &result));
+  return result;
+}
+
+//===========================================================================
+template <>
 inline int32_t decode(napi_env env, napi_value value)
 {
   int32_t result;

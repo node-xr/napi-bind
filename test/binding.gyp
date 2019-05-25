@@ -1,8 +1,9 @@
 {
   'targets': [
     {
-      'target_name': 'napi-bind-test',
+      'target_name': 'napi_bind_test',
       'sources': [
+        'binding.cpp',
         'primitives.cpp'
       ],
       'defines': [
