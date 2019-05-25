@@ -4,7 +4,10 @@
       'target_name': 'napi_bind_test',
       'sources': [
         'binding.cpp',
-        'primitives.cpp'
+        'enums.cpp',
+        'pointers.cpp',
+        'primitives.cpp',
+        'strings.cpp'
       ],
       'defines': [
         'NAPI_EXPERIMENTAL',
