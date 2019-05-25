@@ -25,8 +25,5 @@ napi_value create_primitives(napi_env env)
   set_function(env, value, "identity_float", identity<float>);
   set_function(env, value, "identity_double", identity<double>);
 
-  //set_function(env, value, "identity_char", identity<char *>);
-  //set_function(env, value, "identity_string", identity<std::string>);
-
   return value;
 }
