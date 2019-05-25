@@ -56,4 +56,20 @@ describe("primitives", () => {
     expect(bind.primitives.identity_int32(32767)).to.eq(32767);
   });
 
+  it("float", () => {
+    expect(bind.primitives.identity_float(0.0)).to.eq(0.0);
+    expect(bind.primitives.identity_float(Number.EPSILON)).to.eq(Number.EPSILON);
+    expect(bind.primitives.identity_float(Number.POSITIVE_INFINITY)).to.eq(Number.POSITIVE_INFINITY);
+    expect(bind.primitives.identity_float(Number.NEGATIVE_INFINITY)).to.eq(Number.NEGATIVE_INFINITY);
+    expect(bind.primitives.identity_float(NaN)).to.be.NaN;
+  });
+
+  it("double", () => {
+    expect(bind.primitives.identity_double(0.0)).to.eq(0.0);
+    expect(bind.primitives.identity_float(Number.EPSILON)).to.eq(Number.EPSILON);
+    expect(bind.primitives.identity_double(Number.POSITIVE_INFINITY)).to.eq(Number.POSITIVE_INFINITY);
+    expect(bind.primitives.identity_double(Number.NEGATIVE_INFINITY)).to.eq(Number.NEGATIVE_INFINITY);
+    expect(bind.primitives.identity_double(NaN)).to.be.NaN;
+  });
+
 });
