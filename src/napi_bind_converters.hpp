@@ -11,13 +11,12 @@ template <>
 inline std::string decode(napi_env env, napi_value value)
 {
   constexpr size_t buffer_len = 2048;
-  std::string result;
-  result.reserve(buffer_len);
+  char buffer[buffer_len];
 
-  // FIXME: this is probably unsafe behavior.
+  // FIXME: this is doing an extra copy.
   size_t result_len;
-  ok(napi_get_value_string_utf8(env, value, const_cast<char *>(result.data()), buffer_len, &result_len));
-  result.resize(result_len);
+  ok(napi_get_value_string_utf8(env, value, buffer, buffer_len, &result_len));
+  std::string result(buffer);
 
   return result;
 }

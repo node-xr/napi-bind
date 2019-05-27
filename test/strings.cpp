@@ -6,17 +6,17 @@
 using napi_bind::ok;
 using napi_bind::set_function;
 
-std::string identity_str1(std::string value)
+std::string identity_str(std::string value)
 {
   return value;
 }
 
-const std::string identity_str2(const std::string &value)
+const std::string identity_str_ref(const std::string &value)
 {
   return value;
 }
 
-const char *identity_str3(const char *value)
+const char *identity_char_ptr(const char *value)
 {
   return value;
 }
@@ -26,9 +26,9 @@ napi_value create_strings(napi_env env)
   napi_value value;
   ok(napi_create_object(env, &value));
 
-  set_function(env, value, "identity_str1", identity_str1);
-  set_function(env, value, "identity_str2", identity_str2);
-  //set_function(env, value, "identity_str3", identity_str3);
+  set_function(env, value, "identity_str", identity_str);
+  set_function(env, value, "identity_str_ref", identity_str_ref);
+  set_function(env, value, "identity_char_ptr", identity_char_ptr);
 
   return value;
 }
