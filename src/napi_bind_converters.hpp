@@ -23,7 +23,7 @@ inline std::string decode(napi_env env, napi_value value)
 }
 
 template <>
-inline napi_value encode(napi_env env, const std::string &value)
+inline napi_value encode(napi_env env, const std::string value)
 {
   napi_value result;
   ok(napi_create_string_utf8(env, value.c_str(), value.length(), &result));

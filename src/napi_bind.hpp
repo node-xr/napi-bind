@@ -19,7 +19,7 @@ T decode(napi_env env, napi_value value);
 
 // Specialize this function to implement a custom encoder for a single type.
 template <typename T>
-napi_value encode(napi_env env, const T value);
+napi_value encode(napi_env env, T value);
 
 // Specialize this class to implement a custom decoder over all types matching a `std::enable_if` predicate.
 template <typename T, typename Predicate>

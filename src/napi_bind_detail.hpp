@@ -36,7 +36,7 @@ T decode(napi_env env, napi_value value)
 }
 
 template <typename T>
-napi_value encode(napi_env env, const T value)
+napi_value encode(napi_env env, T value)
 {
   return encoder<T>::eval(env, value);
 }
@@ -69,7 +69,7 @@ T decode_property(napi_env env, napi_value object, const char *prop, T default_v
 }
 
 template <typename T>
-void encode_property(napi_env env, napi_value object, const char *prop, const T value)
+void encode_property(napi_env env, napi_value object, const char *prop, T value)
 {
   napi_value result = encode<T>(env, value);
   ok(napi_set_named_property(env, object, prop, result));
@@ -79,6 +79,8 @@ void encode_property(napi_env env, napi_value object, const char *prop, const T 
 template <typename Result, typename... Args, std::size_t... Idx>
 napi_value caller(Result (*fn)(Args...), napi_env env, napi_value *argv, std::index_sequence<Idx...>)
 {
+  using result_t = std::decay_t<Result>;
+
   // Prevent unused argument warning.
   (void)argv;
 
@@ -86,9 +88,9 @@ napi_value caller(Result (*fn)(Args...), napi_env env, napi_value *argv, std::in
   {
     // Decode and encode in separate steps to allow RAII
     // to handle the lifecycles of these transient args.
-    std::tuple<Args...> args(decode_idx<Args>(env, argv, Idx)...);
-    auto result = fn(std::get<Idx>(args)...);
-    return encode<Result>(env, result);
+    std::tuple<std::decay_t<Args>...> args(decode_idx<std::decay_t<Args>>(env, argv, Idx)...);
+    result_t result = fn(std::get<Idx>(args)...);
+    return encode<result_t>(env, result);
   }
   catch (std::exception &e)
   {
@@ -108,7 +110,7 @@ napi_value caller(void (*fn)(Args...), napi_env env, napi_value *argv, std::inde
   {
     // Decode and encode in separate steps to allow RAII
     // to handle the lifecycles of these transient args.
-    std::tuple<Args...> args(decode_idx<Args>(env, argv, Idx)...);
+    std::tuple<std::decay_t<Args>...> args(decode_idx<std::decay_t<Args>>(env, argv, Idx)...);
     fn(std::get<Idx>(args)...);
     return nullptr;
   }
