@@ -84,7 +84,11 @@ napi_value caller(Result (*fn)(Args...), napi_env env, napi_value *argv, std::in
 
   try
   {
-    return encode<Result>(env, fn(decode_idx<Args>(env, argv, Idx)...));
+    // Decode and encode in separate steps to allow RAII
+    // to handle the lifecycles of these transient args.
+    std::tuple<Args...> args(decode_idx<Args>(env, argv, Idx)...);
+    auto result = fn(std::get<Idx>(args)...);
+    return encode<Result>(env, result);
   }
   catch (std::exception &e)
   {
@@ -102,7 +106,10 @@ napi_value caller(void (*fn)(Args...), napi_env env, napi_value *argv, std::inde
 
   try
   {
-    fn(decode_idx<Args>(env, argv, Idx)...);
+    // Decode and encode in separate steps to allow RAII
+    // to handle the lifecycles of these transient args.
+    std::tuple<Args...> args(decode_idx<Args>(env, argv, Idx)...);
+    fn(std::get<Idx>(args)...);
     return nullptr;
   }
   catch (std::exception &e)
