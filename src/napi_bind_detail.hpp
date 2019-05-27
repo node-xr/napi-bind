@@ -35,6 +35,9 @@ T decode(napi_env env, napi_value value)
   return decoder<T>::eval(env, value);
 }
 
+// TODO(pkv): There is probably a better way to do this by splitting
+// this on the usage of pass-by-reference, but I'm not sure how to
+// separate primitives from heavier objects.
 template <typename T>
 napi_value encode(napi_env env, T value)
 {
