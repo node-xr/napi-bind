@@ -8,7 +8,7 @@ using napi_bind::set_function;
 napi_value create_primitives(napi_env env)
 {
   napi_value value;
-  ok(napi_create_object(env, &value));
+  ok(env, napi_create_object(env, &value));
 
   set_function(env, value, "identity_bool", identity<bool>);
 

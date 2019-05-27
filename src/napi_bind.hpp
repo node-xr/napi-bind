@@ -1,14 +1,26 @@
 #pragma once
 #include <node_api.h>
 #include <stdexcept>
+#include <sstream>
 
 namespace napi_bind
 {
 
-inline constexpr auto ok(napi_status status) -> void
+inline void ok(napi_env env, napi_status status)
 {
-  // https://stackoverflow.com/a/35349979
-  (status != napi_ok) ? throw std::runtime_error("Failed N-API call.") : 0;
+  // If successful, do nothing.
+  if (status == napi_ok)
+    return;
+
+  // Retreive extended error information.
+  const napi_extended_error_info *info;
+  if (napi_get_last_error_info(env, &info) != napi_ok)
+    throw std::runtime_error("Failed N-API call - [unknown]");
+
+  // Rethrow as a readable error message.
+  std::ostringstream ss;
+  ss << "Failed N-API call - " << info->error_message;
+  throw std::runtime_error(ss.str());
 }
 
 //===========================================================================

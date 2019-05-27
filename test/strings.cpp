@@ -16,15 +16,15 @@ const std::string identity_str_ref(const std::string &value)
   return value;
 }
 
-const char *identity_char_ptr(const char *value)
+const char *identity_char_ptr(std::string value)
 {
-  return value;
+  return value.c_str();
 }
 
 napi_value create_strings(napi_env env)
 {
   napi_value value;
-  ok(napi_create_object(env, &value));
+  ok(env, napi_create_object(env, &value));
 
   set_function(env, value, "identity_str", identity_str);
   set_function(env, value, "identity_str_ref", identity_str_ref);

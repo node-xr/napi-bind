@@ -9,10 +9,10 @@ using napi_bind::ok;
 
 static napi_value Init(napi_env env, napi_value exports)
 {
-  ok(napi_set_named_property(env, exports, "enums", create_enums(env)));
-  ok(napi_set_named_property(env, exports, "pointers", create_pointers(env)));
-  ok(napi_set_named_property(env, exports, "primitives", create_primitives(env)));
-  ok(napi_set_named_property(env, exports, "strings", create_strings(env)));
+  ok(env, napi_set_named_property(env, exports, "enums", create_enums(env)));
+  ok(env, napi_set_named_property(env, exports, "pointers", create_pointers(env)));
+  ok(env, napi_set_named_property(env, exports, "primitives", create_primitives(env)));
+  ok(env, napi_set_named_property(env, exports, "strings", create_strings(env)));
   return exports;
 }
 

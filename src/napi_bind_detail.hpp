@@ -54,7 +54,7 @@ template <typename T>
 T decode_property(napi_env env, napi_value object, const char *prop)
 {
   napi_value result;
-  ok(napi_get_named_property(env, object, prop, &result));
+  ok(env, napi_get_named_property(env, object, prop, &result));
   return decode<T>(env, result);
 }
 
@@ -62,7 +62,7 @@ template <typename T>
 T decode_property(napi_env env, napi_value object, const char *prop, T default_value)
 {
   bool has_property;
-  ok(napi_has_named_property(env, object, prop, &has_property));
+  ok(env, napi_has_named_property(env, object, prop, &has_property));
 
   if (has_property) {
     return decode_property<T>(env, object, prop);
@@ -75,7 +75,7 @@ template <typename T>
 void encode_property(napi_env env, napi_value object, const char *prop, T value)
 {
   napi_value result = encode<T>(env, value);
-  ok(napi_set_named_property(env, object, prop, result));
+  ok(env, napi_set_named_property(env, object, prop, result));
 }
 
 // https://blog.tartanllama.xyz/exploding-tuples-fold-expressions/
@@ -133,7 +133,7 @@ napi_value wrapper(napi_env env, napi_callback_info info)
   // Retrieve arguments for callback.
   auto argv = std::array<napi_value, sizeof...(Args)>{};
   size_t argc = num_args;
-  ok(napi_get_cb_info(env, info, &argc, argv.data(), nullptr, (void **)&fn));
+  ok(env, napi_get_cb_info(env, info, &argc, argv.data(), nullptr, (void **)&fn));
 
   // Check that the correct number of arguments was received.
   if (argc < num_args)

@@ -28,7 +28,7 @@ void delete_struct_ptr(test_struct *ptr) {
 napi_value create_pointers(napi_env env)
 {
   napi_value value;
-  ok(napi_create_object(env, &value));
+  ok(env, napi_create_object(env, &value));
 
   set_function(env, value, "create_struct_ptr", create_struct_ptr);
   set_function(env, value, "create_void_ptr", create_void_ptr);
