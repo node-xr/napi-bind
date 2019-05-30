@@ -5,23 +5,28 @@
 using napi_bind::ok;
 using napi_bind::set_function;
 
-struct test_struct {
+struct test_struct
+{
   uint16_t payload;
 };
 
-test_struct *create_struct_ptr() {
+test_struct *create_struct_ptr()
+{
   return new test_struct();
 }
 
-void *create_void_ptr() {
+void *create_void_ptr()
+{
   return create_struct_ptr();
 }
 
-void *create_null_ptr() {
+void *create_null_ptr()
+{
   return nullptr;
 }
 
-void delete_struct_ptr(test_struct *ptr) {
+void delete_struct_ptr(test_struct *ptr)
+{
   delete ptr;
 }
 

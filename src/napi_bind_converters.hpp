@@ -132,7 +132,7 @@ inline uint64_t decode(napi_env env, napi_value value)
     break;
 
   case napi_number:
-    ok(env, napi_get_value_int64(env, value, reinterpret_cast<int64_t*>(&result)));
+    ok(env, napi_get_value_int64(env, value, reinterpret_cast<int64_t *>(&result)));
     break;
 
   default:

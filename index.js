@@ -1,3 +1,3 @@
 module.exports = exports = {
-  include: `"${__dirname}/src"`,
+  include: `"${__dirname}/src"`
 };

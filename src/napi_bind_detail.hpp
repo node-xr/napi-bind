@@ -64,9 +64,12 @@ T decode_property(napi_env env, napi_value object, const char *prop, T default_v
   bool has_property;
   ok(env, napi_has_named_property(env, object, prop, &has_property));
 
-  if (has_property) {
+  if (has_property)
+  {
     return decode_property<T>(env, object, prop);
-  } else {
+  }
+  else
+  {
     return default_value;
   }
 }

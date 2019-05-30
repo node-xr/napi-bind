@@ -7,12 +7,12 @@ using napi_bind::set_function;
 
 enum test_enum_t
 {
-    A=0,
-    B=1,
-    C=2,
-    // Intentional gap
-    E=4,
-    Count
+  A = 0,
+  B = 1,
+  C = 2,
+  // Intentional gap
+  E = 4,
+  Count
 };
 
 napi_value create_enums(napi_env env)
