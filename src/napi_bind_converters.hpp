@@ -266,7 +266,7 @@ struct encoder<T, typename std::enable_if_t<std::is_pointer<T>::value>>
   {
     napi_value result;
     // For a default pointer handler, assume memory is not owned.
-    napi_create_external_opt(env, reinterpret_cast<void *>(value), nullptr, nullptr, &result);
+    napi_create_external_opt(env, static_cast<void *>(value), nullptr, nullptr, &result);
     return result;
   }
 
