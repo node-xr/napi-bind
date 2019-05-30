@@ -241,7 +241,7 @@ inline napi_value encode(napi_env env, const uint64_t value)
 //===========================================================================
 // Default for unmanaged pointer types.
 template <typename T>
-struct decoder<T, typename std::enable_if_t<std::is_pointer<T>::value>>
+struct decoder<T, typename std::enable_if_t<(std::is_pointer<T>::value && !has_decode<T>{})>>
 {
   decoder(napi_env e, napi_value v) : env(e), value(v) {}
 
@@ -258,7 +258,7 @@ private:
 };
 
 template <typename T>
-struct encoder<T, typename std::enable_if_t<std::is_pointer<T>::value>>
+struct encoder<T, typename std::enable_if_t<(std::is_pointer<T>::value && !has_encode<T>{})>>
 {
   encoder(T v) : value(v) {}
 
@@ -277,7 +277,7 @@ private:
 //===========================================================================
 // Default for floating-point types.
 template <typename T>
-struct decoder<T, typename std::enable_if_t<std::is_floating_point<T>::value>>
+struct decoder<T, typename std::enable_if_t<(std::is_floating_point<T>::value && !has_decode<T>{})>>
 {
   decoder(napi_env e, napi_value v) : env(e), value(v) {}
 
@@ -294,7 +294,7 @@ private:
 };
 
 template <typename T>
-struct encoder<T, typename std::enable_if_t<std::is_floating_point<T>::value>>
+struct encoder<T, typename std::enable_if_t<(std::is_floating_point<T>::value && !has_encode<T>{})>>
 {
   encoder(T v) : value(v) {}
 
@@ -312,7 +312,7 @@ private:
 //===========================================================================
 // Default for enum types.
 template <typename T>
-struct decoder<T, typename std::enable_if_t<std::is_enum<T>::value>>
+struct decoder<T, typename std::enable_if_t<(std::is_enum<T>::value && !has_decode<T>{})>>
 {
   decoder(napi_env e, napi_value v) : env(e), value(v) {}
 
@@ -329,7 +329,7 @@ private:
 };
 
 template <typename T>
-struct encoder<T, typename std::enable_if_t<std::is_enum<T>::value>>
+struct encoder<T, typename std::enable_if_t<(std::is_enum<T>::value && !has_encode<T>{})>>
 {
   encoder(T v) : value(v) {}
 

@@ -18,7 +18,8 @@ struct decoder
 
   T operator()()
   {
-    return decode<T>(env, value);
+    static_assert(sizeof(T) == 0, "No decoder implemented.");
+    throw std::invalid_argument("No decoder implemented.");
   }
 
 private:
@@ -32,6 +33,67 @@ struct encoder
   encoder(T v) : value(v) {}
   ~encoder() {}
 
+  napi_value operator()(napi_env)
+  {
+    static_assert(sizeof(T) == 0, "No encoder implemented.");
+    throw std::invalid_argument("No encoder implemented.");
+  }
+
+private:
+  T value;
+};
+
+//===========================================================================
+// Based on: https://vittorioromeo.info/index/blog/checking_expression_validity_in_place.html
+
+template <typename...>
+using void_t = void;
+
+template <typename, typename = void>
+struct has_decode : std::false_type
+{
+};
+
+template <typename T>
+struct has_decode<T, void_t<decltype(decode<T>(std::declval<napi_env>(), std::declval<napi_value>()))>> : std::true_type
+{
+};
+
+template <typename, typename = void>
+struct has_encode : std::false_type
+{
+};
+
+template <typename T>
+struct has_encode<T, void_t<decltype(encode<T>(std::declval<napi_env>(), std::declval<T>()))>> : std::true_type
+{
+};
+
+//===========================================================================
+
+// Based on https://stackoverflow.com/a/47640807
+template <typename T>
+struct decoder<T, typename std::enable_if_t<has_decode<T>{}>>
+{
+  decoder(napi_env e, napi_value v) : env(e), value(v) {}
+  ~decoder() {}
+
+  T operator()()
+  {
+    return decode<T>(env, value);
+  }
+
+private:
+  napi_env env;
+  napi_value value;
+};
+
+template <typename T>
+struct encoder<T, typename std::enable_if_t<has_encode<T>{}>>
+{
+  encoder(T v) : value(v) {}
+  ~encoder() {}
+
   napi_value operator()(napi_env env)
   {
     return encode<T>(env, value);
@@ -40,23 +102,6 @@ struct encoder
 private:
   T value;
 };
-
-template <typename T>
-T decode(napi_env env, napi_value value)
-{
-  static_assert(sizeof(T) == 0, "No decoder implemented.");
-  throw std::invalid_argument("No decoder implemented.");
-}
-
-// TODO(pkv): There is probably a better way to do this by splitting
-// this on the usage of pass-by-reference, but I'm not sure how to
-// separate primitives from heavier objects.
-template <typename T>
-napi_value encode(napi_env env, T value)
-{
-  static_assert(sizeof(T) == 0, "No encoder implemented.");
-  throw std::invalid_argument("No encoder implemented.");
-}
 
 template <typename T>
 T decode_property(napi_env env, napi_value object, const char *prop)

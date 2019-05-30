@@ -27,17 +27,17 @@ inline void ok(napi_env env, napi_status status)
 
 // Specialize this function to implement a custom decoder for a single type.
 template <typename T>
-T decode(napi_env env, napi_value value);
+T decode(napi_env env, napi_value value) = delete;
 
 // Specialize this function to implement a custom encoder for a single type.
 template <typename T>
-napi_value encode(napi_env env, T value);
+napi_value encode(napi_env env, T value) = delete;
 
-// Specialize this class to implement a custom decoder over all types matching a `std::enable_if` predicate.
+// Specialize this class to implement an RAII custom decoder over all types matching a `std::enable_if` predicate.
 template <typename T, typename Predicate>
 struct decoder;
 
-// Specialize this class to implement a custom encoder over all types matching a `std::enable_if` predicate.
+// Specialize this class to implement an RAII custom encoder over all types matching a `std::enable_if` predicate.
 template <typename T, typename Predicate>
 struct encoder;
 
