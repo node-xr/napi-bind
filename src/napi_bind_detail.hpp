@@ -13,27 +13,39 @@ namespace napi_bind
 template <typename T, typename = void>
 struct decoder
 {
-  static T eval(napi_env env, napi_value value)
+  decoder(napi_env e, napi_value v) : env(e), value(v) {}
+  ~decoder() {}
+
+  T operator()()
   {
-    static_assert(sizeof(T) == 0, "No decoder implemented.");
-    throw std::invalid_argument("No decoder implemented.");
+    return decode<T>(env, value);
   }
+
+private:
+  napi_env env;
+  napi_value value;
 };
 
 template <typename T, typename = void>
 struct encoder
 {
-  static napi_value eval(napi_env env, T value)
+  encoder(T v) : value(v) {}
+  ~encoder() {}
+
+  napi_value operator()(napi_env env)
   {
-    static_assert(sizeof(T) == 0, "No encoder implemented.");
-    throw std::invalid_argument("No encoder implemented.");
+    return encode<T>(env, value);
   }
+
+private:
+  T value;
 };
 
 template <typename T>
 T decode(napi_env env, napi_value value)
 {
-  return decoder<T>::eval(env, value);
+  static_assert(sizeof(T) == 0, "No decoder implemented.");
+  throw std::invalid_argument("No decoder implemented.");
 }
 
 // TODO(pkv): There is probably a better way to do this by splitting
@@ -42,13 +54,8 @@ T decode(napi_env env, napi_value value)
 template <typename T>
 napi_value encode(napi_env env, T value)
 {
-  return encoder<T>::eval(env, value);
-}
-
-template <typename T>
-T decode_idx(napi_env env, napi_value *argv, size_t idx)
-{
-  return decode<T>(env, argv[idx]);
+  static_assert(sizeof(T) == 0, "No encoder implemented.");
+  throw std::invalid_argument("No encoder implemented.");
 }
 
 template <typename T>
@@ -82,25 +89,33 @@ void encode_property(napi_env env, napi_value object, const char *prop, T value)
   ok(env, napi_set_named_property(env, object, prop, result));
 }
 
+template <typename T>
+decoder<T> decode_idx(napi_env env, napi_value *argv, size_t idx)
+{
+  return decoder<T>(env, argv[idx]);
+}
+
 // https://blog.tartanllama.xyz/exploding-tuples-fold-expressions/
 template <typename Result, typename... Args, std::size_t... Idx>
 napi_value caller(Result (*fn)(Args...), napi_env env, napi_value *argv, std::index_sequence<Idx...>)
 {
-  using result_t = std::decay_t<Result>;
+  using decoder_t = std::tuple<decoder<std::decay_t<Args>>...>;
+  using encoder_t = encoder<std::decay_t<Result>>;
+
+  // Prevent unused argument warnings.
+  (void)argv;
 
   try
   {
     // Decode and encode in separate steps to allow RAII
     // to handle the lifecycles of these transient args.
-    std::tuple<std::decay_t<Args>...> args(decode_idx<std::decay_t<Args>>(env, argv, Idx)...);
-
-    // Prevent unused argument warnings.
-    (void)argv;
-    (void)args;
+    decoder_t decoders(decode_idx<std::decay_t<Args>>(env, argv, Idx)...);
+    (void)decoders;
 
     // Perform wrapped function call and encode result.
-    result_t result = fn(std::get<Idx>(args)...);
-    return encode<result_t>(env, result);
+    Result result = fn(std::get<Idx>(decoders)()...);
+    encoder_t encoder(result);
+    return encoder(env);
   }
   catch (std::exception &e)
   {
@@ -113,21 +128,20 @@ napi_value caller(Result (*fn)(Args...), napi_env env, napi_value *argv, std::in
 template <typename Result = void, typename... Args, std::size_t... Idx>
 napi_value caller(void (*fn)(Args...), napi_env env, napi_value *argv, std::index_sequence<Idx...>)
 {
-  // Prevent unused argument warning.
+  using decoder_t = std::tuple<decoder<std::decay_t<Args>>...>;
+
+  // Prevent unused argument warnings.
   (void)argv;
 
   try
   {
     // Decode and encode in separate steps to allow RAII
     // to handle the lifecycles of these transient args.
-    std::tuple<std::decay_t<Args>...> args(decode_idx<std::decay_t<Args>>(env, argv, Idx)...);
-
-    // Prevent unused argument warnings.
-    (void)argv;
-    (void)args;
+    decoder_t decoders(decode_idx<std::decay_t<Args>>(env, argv, Idx)...);
+    (void)decoders;
 
     // Perform wrapped function call and return void result.
-    fn(std::get<Idx>(args)...);
+    fn(std::get<Idx>(decoders)()...);
     return nullptr;
   }
   catch (std::exception &e)

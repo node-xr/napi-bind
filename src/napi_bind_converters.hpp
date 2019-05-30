@@ -243,24 +243,35 @@ inline napi_value encode(napi_env env, const uint64_t value)
 template <typename T>
 struct decoder<T, typename std::enable_if_t<std::is_pointer<T>::value>>
 {
-  static T eval(napi_env env, napi_value value)
+  decoder(napi_env e, napi_value v) : env(e), value(v) {}
+
+  T operator()()
   {
     void *result;
     ok(env, napi_get_value_external_opt(env, value, &result));
     return static_cast<T>(result);
   }
+
+private:
+  napi_env env;
+  napi_value value;
 };
 
 template <typename T>
 struct encoder<T, typename std::enable_if_t<std::is_pointer<T>::value>>
 {
-  static napi_value eval(napi_env env, T value)
+  encoder(T v) : value(v) {}
+
+  napi_value operator()(napi_env env)
   {
     napi_value result;
     // For a default pointer handler, assume memory is not owned.
-    napi_create_external_opt(env, static_cast<void *>(value), nullptr, nullptr, &result);
+    napi_create_external_opt(env, reinterpret_cast<void *>(value), nullptr, nullptr, &result);
     return result;
   }
+
+private:
+  T value;
 };
 
 //===========================================================================
@@ -268,23 +279,34 @@ struct encoder<T, typename std::enable_if_t<std::is_pointer<T>::value>>
 template <typename T>
 struct decoder<T, typename std::enable_if_t<std::is_floating_point<T>::value>>
 {
-  static T eval(napi_env env, napi_value value)
+  decoder(napi_env e, napi_value v) : env(e), value(v) {}
+
+  T operator()()
   {
     double result;
     ok(env, napi_get_value_double(env, value, &result));
     return static_cast<T>(result);
   }
+
+private:
+  napi_env env;
+  napi_value value;
 };
 
 template <typename T>
 struct encoder<T, typename std::enable_if_t<std::is_floating_point<T>::value>>
 {
-  static napi_value eval(napi_env env, T value)
+  encoder(T v) : value(v) {}
+
+  napi_value operator()(napi_env env)
   {
     napi_value result;
     ok(env, napi_create_double(env, static_cast<double>(value), &result));
     return result;
   }
+
+private:
+  T value;
 };
 
 //===========================================================================
@@ -292,23 +314,34 @@ struct encoder<T, typename std::enable_if_t<std::is_floating_point<T>::value>>
 template <typename T>
 struct decoder<T, typename std::enable_if_t<std::is_enum<T>::value>>
 {
-  static T eval(napi_env env, napi_value value)
+  decoder(napi_env e, napi_value v) : env(e), value(v) {}
+
+  T operator()()
   {
     uint32_t result;
     ok(env, napi_get_value_uint32(env, value, &result));
     return static_cast<T>(result);
   }
+
+private:
+  napi_env env;
+  napi_value value;
 };
 
 template <typename T>
 struct encoder<T, typename std::enable_if_t<std::is_enum<T>::value>>
 {
-  static napi_value eval(napi_env env, T value)
+  encoder(T v) : value(v) {}
+
+  napi_value operator()(napi_env env)
   {
     napi_value result;
     ok(env, napi_create_uint32(env, static_cast<uint32_t>(value), &result));
     return result;
   }
+
+private:
+  T value;
 };
 
 } // namespace napi_bind
