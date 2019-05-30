@@ -16,9 +16,9 @@ const std::string identity_str_ref(const std::string &value)
   return value;
 }
 
-const char *identity_char_ptr(std::string value)
+const char *identity_char_ptr(const char *value)
 {
-  return value.c_str();
+  return value;
 }
 
 napi_value create_strings(napi_env env)

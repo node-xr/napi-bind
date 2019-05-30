@@ -31,6 +31,20 @@ inline napi_value encode(napi_env env, const std::string value)
 
 //===========================================================================
 template <>
+struct decoder<const char *, typename std::enable_if_t<true>>
+{
+  decoder(napi_env e, napi_value v) : value(decode<std::string>(e, v)) {}
+
+  const char *operator()()
+  {
+    return value.data();
+  }
+
+private:
+  std::string value;
+};
+
+template <>
 inline napi_value encode(napi_env env, const char *value)
 {
   napi_value result;
