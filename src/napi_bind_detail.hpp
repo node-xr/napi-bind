@@ -4,6 +4,7 @@
 #include <sstream>
 #include <stdexcept>
 #include <utility>
+#include <tuple>
 
 namespace napi_bind
 {
@@ -87,14 +88,17 @@ napi_value caller(Result (*fn)(Args...), napi_env env, napi_value *argv, std::in
 {
   using result_t = std::decay_t<Result>;
 
-  // Prevent unused argument warning.
-  (void)argv;
-
   try
   {
     // Decode and encode in separate steps to allow RAII
     // to handle the lifecycles of these transient args.
     std::tuple<std::decay_t<Args>...> args(decode_idx<std::decay_t<Args>>(env, argv, Idx)...);
+
+    // Prevent unused argument warnings.
+    (void)argv;
+    (void)args;
+
+    // Perform wrapped function call and encode result.
     result_t result = fn(std::get<Idx>(args)...);
     return encode<result_t>(env, result);
   }
@@ -117,6 +121,12 @@ napi_value caller(void (*fn)(Args...), napi_env env, napi_value *argv, std::inde
     // Decode and encode in separate steps to allow RAII
     // to handle the lifecycles of these transient args.
     std::tuple<std::decay_t<Args>...> args(decode_idx<std::decay_t<Args>>(env, argv, Idx)...);
+
+    // Prevent unused argument warnings.
+    (void)argv;
+    (void)args;
+
+    // Perform wrapped function call and return void result.
     fn(std::get<Idx>(args)...);
     return nullptr;
   }
