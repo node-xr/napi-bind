@@ -21,7 +21,7 @@ struct decoder
     return decode<T>(env, value);
   }
 
-protected:
+private:
   napi_env env;
   napi_value value;
 };
@@ -37,7 +37,7 @@ struct encoder
     return encode<T>(env, value);
   }
 
-protected:
+private:
   T value;
 };
 
