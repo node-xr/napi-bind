@@ -1,4 +1,5 @@
 # napi-bind
+[![npm version](https://badge.fury.io/js/napi-bind.svg)](https://badge.fury.io/js/napi-bind)
 
 `napi-bind` is a header-only C++ library that takes advantage of two things:
 
