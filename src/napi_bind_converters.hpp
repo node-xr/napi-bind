@@ -156,6 +156,41 @@ inline uint64_t decode(napi_env env, napi_value value)
   return result;
 }
 
+template <>
+inline napi_value encode(napi_env env, const uint64_t value)
+{
+  napi_value result;
+  ok(env, napi_create_bigint_uint64(env, value, &result));
+  return result;
+}
+
+//===========================================================================
+template <>
+inline uintptr_t decode(napi_env env, napi_value value)
+{
+  if (sizeof(uintptr_t) > 4)
+  {
+    return static_cast<uintptr_t>(decode<uint64_t>(env, value));
+  }
+  else
+  {
+    return static_cast<uintptr_t>(decode<uint32_t>(env, value));
+  }
+}
+
+template <>
+inline napi_value encode(napi_env env, const uintptr_t value)
+{
+  if (sizeof(uintptr_t) > 4)
+  {
+    return encode<uint64_t>(env, value);
+  }
+  else
+  {
+    return encode<uint32_t>(env, value);
+  }
+}
+
 //===========================================================================
 template <>
 inline int8_t decode(napi_env env, napi_value value)
@@ -241,14 +276,6 @@ inline napi_value encode(napi_env env, const int64_t value)
 {
   napi_value result;
   ok(env, napi_create_bigint_int64(env, value, &result));
-  return result;
-}
-
-template <>
-inline napi_value encode(napi_env env, const uint64_t value)
-{
-  napi_value result;
-  ok(env, napi_create_bigint_uint64(env, value, &result));
   return result;
 }
 
