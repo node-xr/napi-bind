@@ -11,7 +11,7 @@
   "description": "Node.js API (N-API) automated C-style function bindings",
   "devDependencies": {
     "chai": "^4.2.0",
-    "mocha": "^6.1.4"
+    "mocha": "^6.2.2"
   },
   "homepage": "https://github.com/node-xr/napi-bind",
   "keywords": [
