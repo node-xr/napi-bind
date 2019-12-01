@@ -16,15 +16,15 @@ describe("structs", () => {
     expect(test_output.field).to.eq(4321);
   });
 
-  it("field default", () => {
+  it("field (w/ default)", () => {
     expect(test_output.field_default).to.eq(5555);
   });
 
-  it("field nested", () => {
+  it("field (nested struct)", () => {
     expect(test_output.field_embedded.field_nested).to.eq(1234);
   });
 
-  it("field optional", () => {
+  it("field (optional)", () => {
     expect(test_output.field_optional_absent).to.be.undefined;
     expect(test_output.field_optional_present).to.eq(2032);
   });

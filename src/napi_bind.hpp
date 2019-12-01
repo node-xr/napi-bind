@@ -67,5 +67,6 @@ napi_status set_function(napi_env env, napi_value parent, const char *name, Resu
 napi_status napi_get_value_external_opt(napi_env env, napi_value value, void **result);
 napi_status napi_create_external_opt(napi_env env, void *data, napi_finalize finalize_cb, void *finalize_hint, napi_value *result);
 
-#include "napi_bind_detail.hpp"
-#include "napi_bind_converters.hpp"
+#include "detail/napi_bind_detail.hpp"
+#include "detail/napi_bind_containers.hpp"
+#include "detail/napi_bind_primitives.hpp"

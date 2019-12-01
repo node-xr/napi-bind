@@ -21,4 +21,16 @@ describe("containers", () => {
     expect(output).not.to.eq(input);
     expect(output).to.eql(input);
   });
+
+  it("queue", () => {
+    const output = bind.containers.identity_queue(input);
+    expect(output).not.to.eq(input);
+    expect(output).to.eql(input);
+  });
+
+  it("deque", () => {
+    const output = bind.containers.identity_deque(input);
+    expect(output).not.to.eq(input);
+    expect(output).to.eql(input);
+  });
 });
