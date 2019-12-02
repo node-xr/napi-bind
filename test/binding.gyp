@@ -4,10 +4,12 @@
       'target_name': 'napi_bind_test',
       'sources': [
         'binding.cpp',
+        'containers.cpp',
         'enums.cpp',
         'pointers.cpp',
         'primitives.cpp',
-        'strings.cpp'
+        'strings.cpp',
+        'structs.cpp',
       ],
       'defines': [
         'NAPI_EXPERIMENTAL',
@@ -15,7 +17,7 @@
       ],
       'include_dirs': ["<!@(node -p \"require('../').include\")"],
       'cflags': [ '-Werror', '-Wall', '-Wextra', '-Wpedantic', '-Wunused-parameter' ],
-      'cflags_cc': [ '-Werror', '-Wall', '-Wextra', '-Wpedantic', '-Wunused-parameter' ],
+      'cflags_cc': [ '-Werror', '-Wall', '-Wextra', '-Wpedantic', '-Wunused-parameter', '-std=c++17' ],
       'cflags!': [ '-fno-exceptions' ],
       'cflags_cc!': [ '-fno-exceptions' ],
       'conditions': [
@@ -34,8 +36,9 @@
       },
       'xcode_settings': {
         'CLANG_CXX_LIBRARY': 'libc++',
-        'MACOSX_DEPLOYMENT_TARGET': '10.7',
+        'MACOSX_DEPLOYMENT_TARGET': '10.14',
         'GCC_ENABLE_CPP_EXCEPTIONS': 'YES',
+        'OTHER_CFLAGS': [ '-std=c++17'],
       },
     },
   ],

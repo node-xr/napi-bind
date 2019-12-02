@@ -32,8 +32,7 @@ bool is_red(scoped_enum_t value)
   return value == scoped_enum_t::red;
 }
 
-napi_value
-create_enums(napi_env env)
+napi_value create_enums(napi_env env)
 {
   napi_value value;
   ok(env, napi_create_object(env, &value));

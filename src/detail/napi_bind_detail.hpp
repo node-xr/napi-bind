@@ -3,8 +3,8 @@
 #include <node_api.h>
 #include <sstream>
 #include <stdexcept>
-#include <utility>
 #include <tuple>
+#include <utility>
 
 namespace napi_bind
 {
@@ -108,7 +108,7 @@ T decode_property(napi_env env, napi_value object, const char *prop)
 {
   napi_value result;
   ok(env, napi_get_named_property(env, object, prop, &result));
-  return decode<T>(env, result);
+  return decoder<T>(env, result)();
 }
 
 template <typename T>
@@ -130,8 +130,14 @@ T decode_property(napi_env env, napi_value object, const char *prop, T default_v
 template <typename T>
 void encode_property(napi_env env, napi_value object, const char *prop, T value)
 {
-  napi_value result = encode<T>(env, value);
-  ok(env, napi_set_named_property(env, object, prop, result));
+  napi_value result = encoder<T>(value)(env);
+  if (result)
+  {
+    ok(env, napi_set_named_property(env, object, prop, result));
+  }
+  // Note: this will not _unset_ a property if undefined is passed.
+  // However, it will safely skip modification of the field, so it
+  // can be used during construction of new objects for optional fields.
 }
 
 template <typename T>
@@ -229,19 +235,13 @@ napi_value wrapper(napi_env env, napi_callback_info info)
   return caller(fn, env, argv.data(), std::index_sequence_for<Args...>{});
 }
 
-template <typename Result, typename... Args>
-napi_status set_function(napi_env env, napi_value parent, const char *name, Result (*fn)(Args...))
+inline napi_status set_function_raw(napi_env env, napi_value parent, const char *name, napi_callback fn, void *data = nullptr)
 {
   napi_status status = napi_ok;
   napi_value exported_fn = nullptr;
 
-  // Create a captureless lambda that preserves type information.
-  auto wrapper_fn = [](napi_env env, napi_callback_info info) {
-    return wrapper<Result, Args...>(env, info);
-  };
-
-  // Create a function wrapper that will auto-convert arguments.
-  status = napi_create_function(env, name, NAPI_AUTO_LENGTH, wrapper_fn, (void *)fn, &exported_fn);
+  // Create a function wrapper for the specified function handler.
+  status = napi_create_function(env, name, NAPI_AUTO_LENGTH, fn, data, &exported_fn);
   if (status != napi_ok)
   {
     std::ostringstream ss;
@@ -250,7 +250,7 @@ napi_status set_function(napi_env env, napi_value parent, const char *name, Resu
     return napi_pending_exception;
   }
 
-  // Set the function wrapper on the provided export object.
+  // Set the function on the provided export object.
   status = napi_set_named_property(env, parent, name, exported_fn);
   if (status != napi_ok)
   {
@@ -261,6 +261,18 @@ napi_status set_function(napi_env env, napi_value parent, const char *name, Resu
   }
 
   return napi_ok;
+}
+
+template <typename Result, typename... Args>
+napi_status set_function(napi_env env, napi_value parent, const char *name, Result (*fn)(Args...))
+{
+  // Create a captureless lambda that preserves type information.
+  auto wrapper_fn = [](napi_env env, napi_callback_info info) {
+    return wrapper<Result, Args...>(env, info);
+  };
+
+  // Create a function wrapper that will auto-convert arguments.
+  return set_function_raw(env, parent, name, wrapper_fn, reinterpret_cast<void *>(fn));
 }
 
 } // namespace napi_bind
