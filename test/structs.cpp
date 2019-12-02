@@ -38,7 +38,7 @@ inline napi_value encode(napi_env env, test_object_t obj)
   encode_property<uint32_t>(env, result, "field", obj.field);
   encode_property<uint32_t>(env, result, "field_default", obj.field_default);
   encode_property<test_embedded_t>(env, result, "field_embedded", obj.field_embedded);
-  //encode_property<std::optional<uint32_t>>(env, result, "field_optional_absent", obj.field_optional_absent);
+  encode_property<std::optional<uint32_t>>(env, result, "field_optional_absent", obj.field_optional_absent);
   encode_property<std::optional<uint32_t>>(env, result, "field_optional_present", obj.field_optional_present);
 
   return result;
